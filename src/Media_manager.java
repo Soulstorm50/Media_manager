@@ -10,8 +10,8 @@ import static java.lang.Runtime.getRuntime;
  * Created by Soul on 20.04.2017.
  */
 public class Media_manager {
-    static String medianame;
-    static List<Media_Item> mainList = new ArrayList<Media_Item>();
+    private static String medianame;
+    private static List<Media_Item> mainList = new ArrayList<Media_Item>();
 
 
 
@@ -40,15 +40,16 @@ public class Media_manager {
 
 
     }
-    public static void clearScreen() {for ( int i = 0; i < 25; ++i )
-    {System.out.println();}}
+    private static void clearScreen() {for ( int i = 0; i < 25; ++i )
+    {System.out.println();}} // Метод очищает окно консоли
 
-    public static void screen0() throws IOException
-    {
+    // Главное меню программы
+    private static void screen0() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Welcome to Media Manager v 1.0");
-        System.out.println("Please, make a choice (input 1 - 4. For EXIT press 0)");
-        System.out.println(" ");
+        System.out.println("Soul's Media Manager v 1.0");
+        System.out.println("Пожалуйста, сделайте выбор: Введите на клавиатуре 1 - 9 (Для выхода введите 0)");
+        System.out.println("                            Подтвердите свой выбор нажатием Enter");
+        System.out.println();
         System.out.println("1. Внести в список книгу/музыку/фильм");
         System.out.println("2. Изменить статус для книги/музыки/фильма");
         System.out.println("3. Вывести список книг/музыки/фильма фильтрованный и не фильтрованный по статусу");
@@ -63,37 +64,52 @@ public class Media_manager {
 
 
     }
-    public static void screen1() throws IOException
-    {
+
+    // Секция программы реализующая:
+    // Внести в список книгу/музыку/фильм
+    private static void screen1() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("vvedite nazvanie mediakontenta.");
+        System.out.println("Наберите название контента и нажмите Enter");
+        System.out.println("*** Для возврата в главное меню наберите 0 ***");
         medianame = reader.readLine();
-        System.out.println("Viberite tip " + "* " + medianame + " *");
-        System.out.println("Nazhmi 0 dlya vozvrata v glavnoe menu");
+        if (medianame.equals("0")) {clearScreen(); screen0();}
+        System.out.println("Выберите тип контента для * " + medianame + " * Введите на клавиатуре 1 - 9");
+        System.out.println("*** Для возврата в главное меню наберите 0 ***");
+        System.out.println("Подтвердите свой выбор нажатием Enter");
         System.out.println(" ");
         System.out.println("1. Book");
         System.out.println("2. Film");
         System.out.println("3. Music");
         int w = Integer.parseInt(reader.readLine());
         if (w == 1) { mainList.add(new Book(medianame));
-            System.out.println("Kniga " + medianame + " dobavlena v media galereu");
+            System.out.println("Книга * " + medianame + " * добавлена в медиа галлерею");
         screen1();}
         else if (w == 2) { mainList.add(new Film(medianame));
-            System.out.println("Film " + medianame + " dobavlena v media galereu");
+            System.out.println("Фильм * " + medianame + " * добавлен в медиа галлерею");
             screen1();}
         else if (w == 3) { mainList.add(new Music(medianame));
-            System.out.println("Muzika "  + medianame + " dobavlena v media galereu");
+            System.out.println("Музыка * "  + medianame + " * добавлена в медиа галлерею");
             screen1();}
         else if (w == 0) {clearScreen(); screen0();}
 
     }
-    public static void screen2() throws IOException {
+
+    // Секция программы реализующая:
+    // Изменить статус для книги/музыки/фильма
+    private static void screen2() throws IOException {
         Map<Integer, Integer> sameNames = new HashMap<Integer, Integer>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("vvedite nazvanie mediakontenta.");
+        System.out.println("Наберите название медиаконтента для изменения статуса:");
+        System.out.println("*** Для возврата в главное меню наберите 0 ***");
+        System.out.println("Подтвердите свой выбор нажатием Enter");
         medianame = reader.readLine();
+        if (medianame.equals("0")) {clearScreen(); screen0();}
 
-        System.out.println("Dobavit status k:  (Press 1 - 9)");
+        System.out.println();
+        System.out.println("Выберите в каком именно медиа контенте изменить статус:");
+        System.out.println("Введите на клавиатуре 1 - 9");
+        System.out.println("*** Для возврата в главное меню наберите 0 ***");
+        System.out.println("Подтвердите свой выбор нажатием Enter");
         System.out.println();
         Integer count = 1;
         for (int i = 0; i < mainList.size(); i++) {
@@ -102,11 +118,12 @@ public class Media_manager {
                 System.out.println(count + " " + mainList.get(i) + " - " + typeCheck(mainList.get(i)));
                 count++;
             }
-            else {
-                clearScreen();
-                System.out.println("Error! V galeree net media s takim nazvaniem");
-                screen2();
-            }
+//            else {
+//                clearScreen();
+//                System.out.println("Ошибка! В галлерее нет контента с названием * " + medianame + " *");
+//                System.out.println();
+//                screen2();
+//            }
         }
         count = Integer.parseInt(reader.readLine());
 
@@ -121,66 +138,72 @@ public class Media_manager {
         else if (typeCheck(mainList.get(sameNames.get(count))).equals("Music")) {
             mainList.get(sameNames.get(count)).setStatus(statusMusic(Integer.parseInt(reader.readLine())));}
 
-        System.out.println("Kontent: " + mainList.get(sameNames.get(count)).getName() + " New status: " + mainList.get(sameNames.get(count)).getStatus());
+        System.out.println("В медиа контенте * " + mainList.get(sameNames.get(count)).getName() + " * новый статус: " + mainList.get(sameNames.get(count)).getStatus());
+        System.out.println();
         screen2();
 
     }
 
-    public static void screen3() throws IOException
-    {
+    // Секция программы реализующая:
+    // Вывести список книг/музыки/фильма фильтрованный и не фильтрованный по статусу
+    private static void screen3() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         List<Media_Item> tempList = new ArrayList<Media_Item>();
         int count = 0;
-        System.out.println("Viberite kakoy vi hotite vivesti spisok? (1 - 9)");
+        System.out.println("Какой тип контента вы хотите вывести на экран?");
+        System.out.println("Сделайте выбор (1 - 9) и подтвердите нажатием Enter");
+        System.out.println("*** Для возврата в главное меню наберите 0 ***");
         System.out.println();
-        System.out.println("1 - Spisok Knig");
-        System.out.println("2 - Spisok Filmov");
-        System.out.println("3 - Spisok Muziki");
-        System.out.println("4 - Vsya mediateka");
+        System.out.println("1. Список книг");
+        System.out.println("2. Список фильмов");
+        System.out.println("3. Список музыки");
+        System.out.println("4. Список всей медиатеки");
         count = Integer.parseInt(reader.readLine());
         if (count == 1) {
-            System.out.println("Knigi: ");
+            System.out.println("Список книг: ");
             for (int i = 0; i < mainList.size(); i++) {
                 if (mainList.get(i) instanceof Book) {
                     tempList.add(mainList.get(i));
-                    System.out.println(mainList.get(i).getName() + " Status: " + mainList.get(i).getStatus());
+                    System.out.println("* " + mainList.get(i).getName() + " * статус: " + mainList.get(i).getStatus());
                 }
             }
         }
         else if (count == 2) {
-            System.out.println("Filmi: ");
+            System.out.println("Список фильмов: ");
             for (int i = 0; i < mainList.size(); i++) {
                 if (mainList.get(i) instanceof Film) {
                     tempList.add(mainList.get(i));
-                    System.out.println(mainList.get(i).getName() + " Status: " + mainList.get(i).getStatus());
+                    System.out.println("* " + mainList.get(i).getName() + " * статус: " + mainList.get(i).getStatus());
                 }
             }
         }
         else if (count == 3) {
-            System.out.println("Muzika: ");
+            System.out.println("Список музыки: ");
             for (int i = 0; i < mainList.size(); i++) {
                 if (mainList.get(i) instanceof Music) {
                     tempList.add(mainList.get(i));
-                    System.out.println(mainList.get(i).getName() + " Status: " + mainList.get(i).getStatus());
+                    System.out.println("* " + mainList.get(i).getName() + " * статус: " + mainList.get(i).getStatus());
                 }
             }
         }
         else if (count == 4) {
-            System.out.println("Vsya mediateka: ");
+            System.out.println("Список всей медиатеки: ");
             for (int i = 0; i < mainList.size(); i++) {
-                    System.out.println(mainList.get(i).getName() + " Status: " + mainList.get(i).getStatus());
+                    System.out.println(typeCheck(mainList.get(i)) + " * " + mainList.get(i).getName() + " * статус: " + mainList.get(i).getStatus());
                     tempList = mainList;
                 }
         }
-        System.out.println("Otsortirovat po statusy ???");
+        else if (count == 0) {clearScreen(); screen0();}
         System.out.println();
-        System.out.println("1 - Da");
-        System.out.println("2 - Net");
+        System.out.println("Отсортировать список по статусу?");
+        System.out.println();
+        System.out.println("1 - Да");
+        System.out.println("2 - Нет");
 
         count = Integer.parseInt(reader.readLine());
         if (count == 1) {
             for (int i = 0; i < sortByStatus(tempList).size(); i++) {
-                System.out.println(sortByStatus(tempList).get(i).getName()  + " Status: " + sortByStatus(tempList).get(i).getStatus() );
+                System.out.println(typeCheck(tempList.get(i)) + " * " + sortByStatus(tempList).get(i).getName()  + " * статус: " + sortByStatus(tempList).get(i).getStatus() );
             }
 
         }
@@ -189,16 +212,19 @@ public class Media_manager {
 
 
     }
-    public static void screen4() throws IOException
-    {
+
+    // Секция программы реализующая:
+    // Удалить книгу/музыку фильм
+    private static void screen4() throws IOException {
         Map<Integer, Integer> sameNames = new HashMap<Integer, Integer>();
         int count = 1;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Vvedite nazvanie kontenta dlya ydalenia: (0 - glavnoe menu)");
+        System.out.println("Наберите название контента для удаления из галлереи и нажмите Enter");
+        System.out.println("*** Для возврата в главное меню наберите 0 ***");
         medianame = reader.readLine();
         if (medianame.equals("0")) {clearScreen(); screen0();}
         else
-          System.out.println("Viberite odin iz vozmognih variantov (1 - 9)");
+          System.out.println("Выберите один из возможных вариантов: (1 - 9)");
         System.out.println();
 
 
@@ -218,67 +244,65 @@ public class Media_manager {
         int s = sameNames.get(count);
         mainList.remove(s);
 
-        clearScreen();
-        System.out.println("Media udaleno");
+        System.out.println("Выбранный медиа контент удален!");
+        System.out.println();
         screen4();
 
 
     }
 
-    public  static String typeCheck(Media_Item obj) {
+    private static String typeCheck(Media_Item obj) {
         String res = "";
         if (obj instanceof Book) {res = "Book";}
         else if (obj instanceof Film) {res = "Film";}
         else if (obj instanceof Music) {res = "Music";}
         return res;
-    }
-    public static void setStatusMedia(Media_Item obj) {
+    } // Возвращаетс строку с типом медиа контента
+    private static void setStatusMedia(Media_Item obj) {
         if (obj instanceof Book) {
-            System.out.println("Viberite status dlya KNIGI");
+            System.out.println("Выберите новый статус для книги:");
             System.out.println();
-            System.out.println("1 - WANT READ");
-            System.out.println("2 - READING");
-            System.out.println("3 - ALREADY READ");
+            System.out.println("1. WANT READ");
+            System.out.println("2. READING");
+            System.out.println("3. ALREADY READ");
         }
         else if (obj instanceof Film) {
-            System.out.println("Viberite status dlya FILMA");
+            System.out.println("Выберите новый статус для фильма");
             System.out.println();
-            System.out.println("1 - WANT WATCH");
-            System.out.println("2 - WATCHING");
-            System.out.println("3 - ALREADY WATCH");
+            System.out.println("1. WANT WATCH");
+            System.out.println("2. WATCHING");
+            System.out.println("3. ALREADY WATCH");
         }
         else if (obj instanceof Music) {
-            System.out.println("Viberite status dlya MUZIKI");
+            System.out.println("Выберите новый статус для музыки");
             System.out.println();
-            System.out.println("1 - WANT LISTEN");
-            System.out.println("2 - LISTENING");
-            System.out.println("3 - ALREADY LISTEN");
+            System.out.println("1. WANT LISTEN");
+            System.out.println("2. LISTENING");
+            System.out.println("3. ALREADY LISTEN");
         }
-    }
-    public static String statusBook (int choose){
+    } // Предоставляет визуализацию для выбора статуса
+    private static String statusBook (int choose){
         String res = "";
         if (choose == 1){res = "WANT READ";}
         else if (choose == 2){res = "READING";}
         else if (choose == 3) { res = "ALREADY READ";}
         return res;
-    }
-    public static String statusFilm (int choose){
+    } // Возвращает статус для класса Book
+    private static String statusFilm (int choose){
         String res = "";
         if (choose == 1){res = "WANT WATCH";}
         else if (choose == 2){res = "WATCHING";}
         else if (choose == 3) { res = "ALREADY WATCH";}
         return res;
-    }
-    public static String statusMusic (int choose){
+    } // Возвращает статус для класса Film
+    private static String statusMusic (int choose){
         String res = "";
         if (choose == 1){res = "WANT LISTEN";}
         else if (choose == 2){res = "LISTENING";}
         else if (choose == 3) { res = "ALREADY LISTEN";}
         return res;
-    }
-
-    public static List<Media_Item> sortByStatus (List<Media_Item> item)
-    {
+    } // Возвращает статус для класса Music
+    private static List<Media_Item> sortByStatus (List<Media_Item> item) {
         List<Media_Item> res = new ArrayList<>();
         List<String> tmp = new ArrayList<>();
         Set<String> map = new HashSet<>();
@@ -298,6 +322,6 @@ public class Media_manager {
             }
         }
         return res;
-    }
+    } // Метод сортирует по статусу
 
 }

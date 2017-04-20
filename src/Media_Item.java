@@ -1,6 +1,8 @@
 /**
  * Created by Soul on 20.04.2017.
  */
+
+// Суперкласс для медиаконтента
 public class Media_Item {
     private String name = "New Item";
     private String status = "WANT USE";

@@ -1,6 +1,8 @@
 /**
  * Created by Soul on 20.04.2017.
  */
+
+// Отнаследованный класс от Media_Item, реализует разновидность контента
 public class Music extends Media_Item{
     private String name = "New Music";
     private String status = "WANT LISTEN";
